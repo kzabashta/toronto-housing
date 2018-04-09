@@ -5,8 +5,9 @@ INDIVIDUAL_LISTING_URL = 'https://mongohouse.com/api/soldrecords?ids={0}'
 
 def get_listings(price_min, price_max, sold_day_back, south, west, north, east):
     r = requests.get(LISTINGS_URL.format(price_min, price_max, sold_day_back, south, west, north, east))
+    print(len(r.json()))
     return list(map(lambda x: x['_id'], r.json()))
 
 def get_listing(id):
     r = requests.get(INDIVIDUAL_LISTING_URL.format(id))
-    return r.json()
+    return r.json()[1]
