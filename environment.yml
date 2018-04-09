@@ -1,0 +1,5 @@
+name: toronto-housing
+channels:
+  - defaults
+prefix: C:\ProgramData\Anaconda3\envs\toronto-housing
+
