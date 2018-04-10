@@ -4,7 +4,7 @@ from pymongo import MongoClient
 
 from bokeh.io import show, output_file
 from bokeh.models import ColumnDataSource
-from bokeh.palettes import Spectral5
+from bokeh.palettes import viridis
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
 
@@ -28,24 +28,24 @@ def extract_type(x):
 
 def plot_counts_by_type(df):
     df = df.dropna()
-    group = df.groupby(['PropertyStyle'])
-    source = ColumnDataSource(group)
-    cyl_cmap = factor_cmap('PropertyStyle', palette=Spectral5, factors=df.PropertyStyle.unique())
+    group = df.groupby('PropertyStyle').count().sort_values(by='_Sold', ascending=False)
 
-    p = figure(x_range=group, title="Solds by Type", tools="")
- 
-    p.vbar(x='PropertyStyle', top='_Sold_count', width=1, source=source,
-       line_color=cyl_cmap, fill_color=cyl_cmap)
+    cities = list(group.reset_index().PropertyStyle)
+    solds = list(group.reset_index()._Sold)
 
+    source = ColumnDataSource(data=dict(cities=cities, solds=solds, color=viridis(len(cities))))
+
+    p = figure(x_range=cities, title="Solds by Styles", toolbar_location=None, tools="", sizing_mode='stretch_both')
+
+    p.vbar(x='cities', top='solds', width=0.9, color='color', legend=None, source=source)
+
+    p.xgrid.grid_line_color = None
     p.y_range.start = 0
     p.xgrid.grid_line_color = None
-    p.xaxis.axis_label = "some stuff"
     p.xaxis.major_label_orientation = 1.2
     p.outline_line_color = None
 
     show(p)
-
-    #print(group_df)
 
 if __name__ == '__main__':
 
@@ -60,4 +60,3 @@ if __name__ == '__main__':
     df['PropertyType'] = df._ownershiptype.apply(extract_type)
 
     plot_counts_by_type(df)
-    print(list(df))
