@@ -12,7 +12,7 @@ EAST_MAX = -78.5558622937744
 @click.command()
 @click.option('--price-min', default=0, help='Minimum price')
 @click.option('--price-max', default=999999999, help='Maximum price')
-@click.option('--sold-day-back', default=90, help='Maximum days sold back')
+@click.option('--sold-day-back', default=2, help='Maximum days sold back')
 @click.option('--db-name', default='solds', help='Table name to store results in')
 def scrape(price_min, price_max, sold_day_back, db_name):
     for i in range(0, int((NORTH_MAX-NORTH_MIN) / GRID_SIZE)):

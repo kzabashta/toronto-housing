@@ -1,4 +1,6 @@
 import pandas as pd
+import holoviews as hv
+hv.extension('bokeh')
 
 from pymongo import MongoClient
 
@@ -29,6 +31,8 @@ def extract_type(x):
 def plot_counts_by_type(df):
     df = df.dropna()
     group = df.groupby('PropertyStyle').count().sort_values(by='_Sold', ascending=False)
+    curve = hv.Curve(spike_train, 'milliseconds', 'Hertz', group='Firing Rate')
+
 
     cities = list(group.reset_index().PropertyStyle)
     solds = list(group.reset_index()._Sold)
